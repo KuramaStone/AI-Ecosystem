@@ -31,12 +31,15 @@ set_property(TARGET ecort PROPERTY CXX_STANDARD 17)
 # According to https://github.com/pytorch/pytorch/issues/25457,
 # the DLLs need to be copied to avoid memory errors.
 if (MSVC)
-  file(GLOB TORCH_DLLS "${TORCH_INSTALL_PREFIX}/lib/*.dll")
-  add_custom_command(TARGET ecort
-                     POST_BUILD
-                     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                     ${TORCH_DLLS}
-                     $<TARGET_FILE_DIR:ecort>)
+# Copy Torch DLLs
+file(GLOB TO_COPY "${Torch_PATH}/lib/*.dll")
+add_custom_command(TARGET ecort
+                    POST_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                            ${TO_COPY}
+                            $<TARGET_FILE_DIR:ecort>
+                    COMMENT "Copying Torch DLLs"
+)
 endif (MSVC)
 
 

@@ -4,9 +4,16 @@
 cmake_minimum_required (VERSION 3.8)
 
 project ("EcoRT")
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+	set(Torch_PATH "${CMAKE_SOURCE_DIR}/third-party/libtorch_2.3.1_cuda12.1_Debug")
+else()
+	set(Torch_PATH "${CMAKE_SOURCE_DIR}/third-party/libtorch_2.3.1_cuda12.1_Release")
+endif()
+set(Torch_DIR         "${Torch_PATH}/share/cmake/torch")
+set(CUDAToolkit_ROOT "$ENV{CUDA_PATH}")
+find_package(Torch REQUIRED PATH ${Torch_DIR})
+include_directories(${TORCH_INCLUDE_DIRS})
 
-set(CMAKE_PREFIX_PATH "third-party\\libtorch\\share\\cmake\\Torch")
-find_package(Torch REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ox /favor:INTEL64 /arch:AVX2 /fp:fast /openmp")
 
